@@ -1,5 +1,5 @@
 def ENV_NAME = getEnvName(env.BRANCH_NAME)
-def CONTAINER_NAME = "calculator-" +ENV_NAME
+def CONTAINER_NAME = "calc-" +ENV_NAME
 def CONTAINER_TAG = getTag(env.BUILD_NUMBER, env.BRANCH_NAME)
 def HTTP_PORT = getHTTPPort(env.BRANCH_NAME)
 def EMAIL_RECIPIENTS = "frifitamarwan1@gmail.com"
@@ -8,8 +8,8 @@ def EMAIL_RECIPIENTS = "frifitamarwan1@gmail.com"
 node {
     try {
         stage('Initialize') {
-            def dockerHome = tool 'DockerLatest'
-            def mavenHome = tool 'MavenLatest'
+            def dockerHome = tool 'dockerlatest2'
+            def mavenHome = tool 'mavenlatest2'
             env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}"
         }
 
@@ -96,21 +96,21 @@ def sendEmail(recipients) {
 }
 
 String getEnvName(String branchName) {
-    if (branchName == 'main') {
+    if (branchName == 'master') {
         return 'prod'
     }
-    return (branchName == 'developement') ? 'uat' : 'dev'
+    return (branchName == 'preprod') ? 'uat' : 'dev'
 }
 
 String getHTTPPort(String branchName) {
-    if (branchName == 'main') {
+    if (branchName == 'master') {
         return '8696'
     }
     return (branchName == 'preprod') ? '8797' : '8595'
 }
 
 String getTag(String buildNumber, String branchName) {
-    if (branchName == 'main') {
+    if (branchName == 'master') {
         return buildNumber + '-unstable'
     }
     return buildNumber + '-stable'
